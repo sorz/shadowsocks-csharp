@@ -14,7 +14,9 @@ namespace Shadowsocks.Model
     {
         public string server;
         public int server_port;
+        public string username;
         public string password;
+        public string vendor_password;
         public string method;
         public string remarks;
 
@@ -39,7 +41,9 @@ namespace Shadowsocks.Model
             this.server = "";
             this.server_port = 8388;
             this.method = "aes-256-cfb";
+            this.username = "";
             this.password = "";
+            this.vendor_password = "";
             this.remarks = "";
         }
 

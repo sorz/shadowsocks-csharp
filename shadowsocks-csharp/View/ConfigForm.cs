@@ -44,7 +44,9 @@ namespace Shadowsocks.View
             DeleteButton.Text = I18N.GetString("&Delete");
             IPLabel.Text = I18N.GetString("Server IP");
             ServerPortLabel.Text = I18N.GetString("Server Port");
+            UsernameLabel.Text = I18N.GetString("Username");
             PasswordLabel.Text = I18N.GetString("Password");
+            VendorKeyLabel.Text = I18N.GetString("Vendor Key");
             EncryptionLabel.Text = I18N.GetString("Encryption");
             ProxyPortLabel.Text = I18N.GetString("Proxy Port");
             RemarksLabel.Text = I18N.GetString("Remarks");
@@ -78,7 +80,9 @@ namespace Shadowsocks.View
                 {
                     server = IPTextBox.Text,
                     server_port = int.Parse(ServerPortTextBox.Text),
+                    username = UsernameTextBox.Text,
                     password = PasswordTextBox.Text,
+                    vendor_password = VendorPasswordTextBox.Text,
                     method = EncryptionSelect.Text,
                     remarks = RemarksTextBox.Text
                 };
@@ -109,7 +113,9 @@ namespace Shadowsocks.View
 
                 IPTextBox.Text = server.server;
                 ServerPortTextBox.Text = server.server_port.ToString();
+                UsernameTextBox.Text = server.username;
                 PasswordTextBox.Text = server.password;
+                VendorPasswordTextBox.Text = server.vendor_password;
                 ProxyPortTextBox.Text = _modifiedConfiguration.localPort.ToString();
                 EncryptionSelect.Text = server.method ?? "aes-256-cfb";
                 RemarksTextBox.Text = server.remarks;

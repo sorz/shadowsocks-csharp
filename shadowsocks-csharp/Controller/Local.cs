@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using Shadowsocks.Encryption;
 using Shadowsocks.Model;
+using System.Security.Cryptography;
 
 namespace Shadowsocks.Controller
 {
@@ -162,8 +163,18 @@ namespace Shadowsocks.Controller
 
                 //Console.WriteLine("Socket connected to {0}",
                 //    remote.RemoteEndPoint.ToString());
-
-                HandshakeReceive();
+                IEncryptor venderEncryptor = EncryptorFactory.GetEncryptor(server.method, server.vendor_password);
+                SHA256Managed sha256 = new SHA256Managed();
+                
+                string userstring = server.username + server.password;
+                byte[] userhash = sha256.ComputeHash(Encoding.UTF8.GetBytes(userstring));
+                byte[] authHeader = new byte[userhash.Length +1];
+                authHeader[0] = 0x00;
+                userhash.CopyTo(authHeader, 1);
+                byte[] authHeaderBuffer = new byte[128];
+                int length;
+                venderEncryptor.Encrypt(authHeader, authHeader.Length, authHeaderBuffer, out length);
+                remote.BeginSend(authHeaderBuffer, 0, length, 0, new AsyncCallback(HandshakeReceive), null);
             }
             catch (Exception e)
             {
@@ -172,7 +183,7 @@ namespace Shadowsocks.Controller
             }
         }
 
-        private void HandshakeReceive()
+        private void HandshakeReceive(IAsyncResult ar)
         {
             if (closed)
             {
@@ -180,6 +191,8 @@ namespace Shadowsocks.Controller
             }
             try
             {
+                remote.EndSend(ar);
+
                 int bytesRead = _firstPacketLength;
 
                 if (bytesRead > 1)

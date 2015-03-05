@@ -35,7 +35,9 @@ namespace Shadowsocks.Model
         public static void CheckServer(Server server)
         {
             CheckPort(server.server_port);
+            CheckUsername(server.username);
             CheckPassword(server.password);
+            CheckVendorPassword(server.vendor_password);
             CheckServer(server.server);
         }
 
@@ -118,11 +120,27 @@ namespace Shadowsocks.Model
             }
         }
 
+        private static void CheckUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException(I18N.GetString("Username cannot be blank"));
+            }
+        }
+
         private static void CheckPassword(string password)
         {
             if (string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException(I18N.GetString("Password can not be blank"));
+            }
+        }
+
+        private static void CheckVendorPassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException(I18N.GetString("Vendor key cannot be blank"));
             }
         }
 
